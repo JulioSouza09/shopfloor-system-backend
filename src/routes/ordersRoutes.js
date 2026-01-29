@@ -1,17 +1,11 @@
 import express from 'express'
 
+import { getALlOrders, addNewOrder } from '../controllers/ordersController';
+
 const router = express.Router();
 
-let data = [];
+router.get('/orders', getALlOrders);
 
-router.get('/orders', (req, res) => {
-    res.json(data);
-});
-
-router.post('/orders', (req, res) => {
-    console.log(req.body)
-    data.push(req.body);
-    res.status(201).json({ status: "success" });
-});
+router.post('/orders', addNewOrder);
 
 export default router;
