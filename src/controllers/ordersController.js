@@ -21,7 +21,7 @@ export const addNewOrder = (req, res) => {
 
 export const getOrder = (req, res) => {
     try {
-        const order = ordersService.get(id);
+        const order = ordersService.get(req.params.id);
         console.log(order);
         if (!order)
             return res.status(404).json({ error: "Order not found." })
@@ -34,7 +34,7 @@ export const getOrder = (req, res) => {
 
 export const updateOrder = (req, res) => {
     try {
-        const order = ordersService.update(id, req.body);
+        const order = ordersService.update(req.params.id, req.body);
         if (!order) {
             return res.status(404).json({ error: "Order not found" });
         };
@@ -47,7 +47,7 @@ export const updateOrder = (req, res) => {
 
 export const removeOrder = (req, res) => {
     try {
-        if (!ordersService.remove(id))
+        if (!ordersService.remove(req.params.id))
             return res.status(404).json({ error: "Order not found" });
         res.json({ message: "Order deleted" });
     } catch (error) {
