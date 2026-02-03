@@ -1,39 +1,45 @@
-class MachinesService {
-    #data = [];
-    #idCount = 1;
+import db from "../database/db.js";
 
+class MachinesService {
     getAll() {
-        return this.#data;
-    };
+        const select = db.prepare('SELECT * FROM machines');
+        return select.all();
+    }
 
     createNew(reqBody) {
-        const newMachine ={
-            id: this.#idCount++,
-            ...reqBody
-        }
-        this.#data.push(newMachine);
-        return newMachine;
-    };
+        const insert = db.prepare(`
+            INSERT INTO machines (name, status) VALUES (?, ?)
+            RETURNING *
+        `);
+        return insert.get(reqBody.name, reqBody.status);
+
+    }
 
     get(id) {
-        return this.#data.find(machine => machine.id === id);
-    };
+        const select = db.prepare(`
+            SELECT * FROM machines
+            WHERE id = ?
+        `);
+        return select.get(id);
+    }
 
     updateStatus(id, reqBody) {
-        const pos = this.#data.findIndex(machine => machine.id === id);
-        if (pos === -1)
-            return null;
-        this.#data[pos].status = reqBody.status;
-        return this.#data[pos];
+        const update = db.prepare(`
+            UPDATE machines
+            SET status = ?
+            WHERE id = ?
+            RETURNING *
+        `);
+        return update.get(reqBody.status, id);
     }
 
     remove(id) {
-        const pos = this.#data.findIndex(machine => machine.id === id);
-        console.log(pos);
-        if (pos === -1)
-            return false;
-        this.#data.splice(pos, 1);
-        return true;
+        const remove = db.prepare(`
+            DELETE FROM machines
+            WHERE id = ?
+        `);
+        const result = remove.run(id);
+        return result.changes > 0;
     }
 };
 
