@@ -23,6 +23,7 @@ class OrdersService {
             UPDATE orders
             SET product = ?, quantity = ?, status = ?
             WHERE id = ?
+            RETURNING *
         `)
         return update.get(reqBody.product, reqBody.quantity, reqBody.status, id);
     }
