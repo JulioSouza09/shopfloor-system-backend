@@ -1,6 +1,6 @@
 class OrdersService {
     #data = [];
-    #id_count = 1;
+    #idCount = 1;
 
     getAll() {
         return this.#data;
@@ -8,7 +8,7 @@ class OrdersService {
 
     createNew(reqBody) {
         const newOrder ={
-            id: this.#id_count++,
+            id: this.#idCount++,
             ...reqBody
         }
         this.#data.push(newOrder);
