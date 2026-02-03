@@ -1,42 +1,36 @@
-class OrdersService {
-    #data = [];
-    #idCount = 1;
+import db from '../database/db.js'
 
+class OrdersService {
     getAll() {
-        return this.#data;
+        const select = db.prepare('SELECT * FROM orders');
+        return select.all();
     };
 
     createNew(reqBody) {
-        const newOrder ={
-            id: this.#idCount++,
-            ...reqBody
-        }
-        this.#data.push(newOrder);
-        return newOrder;
+        const insert = db.prepare(`
+            INSERT INTO orders (product, quantity, status) VALUES (?, ?, ?) RETURNING *
+        `);
+        return insert.get(reqBody.product, reqBody.quantity, reqBody.status);
     };
 
     get(id) {
-        return this.#data.find(order => order.id === id);
+        const select = db.prepare('SELECT * FROM orders WHERE id = ?');
+        return select.get(id);
     };
 
     update(id, reqBody) {
-        const pos = this.#data.findIndex(order => order.id === id);
-        if (pos === -1)
-            return null;
-        this.#data[pos] = {
-            id: this.#data[pos].id,
-            ...reqBody
-        };
-        return this.#data[pos];
+        const update = db.prepare(`
+            UPDATE orders
+            SET product = ?, quantity = ?, status = ?
+            WHERE id = ?
+        `)
+        return update.get(reqBody.product, reqBody.quantity, reqBody.status, id);
     }
 
     remove(id) {
-        const pos = this.#data.findIndex(order => order.id === id);
-        console.log(pos);
-        if (pos === -1)
-            return false;
-        this.#data.splice(pos, 1);
-        return true;
+        const remove = db.prepare('DELETE FROM orders WHERE id = ?');
+        const result = remove.run(id);
+        return result.changes > 0;
     }
 };
 
