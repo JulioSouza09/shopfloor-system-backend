@@ -33,6 +33,29 @@ class OrdersService {
         const result = remove.run(id);
         return result.changes > 0;
     }
+
+    getKPI() {
+        const orders = this.getAll();
+        const totalOrders = orders.length;
+        const completedOrders = orders.filter(o => o.status === 'COMPLETED').length;
+        const pendingOrders = orders.filter(o => o.status === 'PENDING').length;
+        const inProgressOrders = orders.filter(o => o.status === 'IN_PROGRESS').length;
+        const completionRate = totalOrders > 0 ? (completedOrders / totalOrders) * 100 : 0;
+        const totalUnitsProduced = orders.reduce((sum, order) => {
+            if (order.status === 'COMPLETED')
+                return sum + order.quantity;
+            return sum + 0;
+        })
+        const kpi = {
+            totalOrders: totalOrders,
+            completedOrders: completedOrders,
+            pendingOrders: pendingOrders,
+            inProgressOrders: inProgressOrders,
+            completionRate: completionRate,
+            totalUnitsProduced: totalUnitsProduced
+        };
+        return kpi;
+    }
 };
 
 export default new OrdersService();
