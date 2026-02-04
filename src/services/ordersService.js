@@ -45,7 +45,7 @@ class OrdersService {
             if (order.status === 'COMPLETED')
                 return sum + order.quantity;
             return sum + 0;
-        })
+        }, 0);
         const kpi = {
             totalOrders: totalOrders,
             completedOrders: completedOrders,
