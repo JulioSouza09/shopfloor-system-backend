@@ -13,8 +13,8 @@ export const getAllMachines = (req, res) => {
 export const createNewMachine = (req, res) => {
     try {
         const newMachine = machinesService.createNew(req.body);
-        res.status(201).json(newMachine);
         kpiService.invalidateCache();
+        res.status(201).json(newMachine);
     } catch (error) {
         console.error('Failed to add new machine: ', error);
         res.status(500).json({ error: "Failed to add new machine" })
@@ -45,5 +45,17 @@ export const updateMachineStatus = (req, res) => {
     } catch (error) {
         console.error('Failed to update machine: ', error);
         res.status(500).json({ error: "Failed to update machine" })
+    }
+};
+
+export const removeMachine = (req, res) => {
+    try {
+        if (!machinesService.remove(req.params.id))
+            return res.status(404).json({ error: "Machine not found" });
+        kpiService.invalidateCache();
+        res.json({ message: "Machine deleted" });
+    } catch (error) {
+        console.error('Failed to remove machine: ', error);
+        res.status(500).json({ error: "Failed to remove machine" });
     }
 };
