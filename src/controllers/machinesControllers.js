@@ -1,4 +1,5 @@
-import machinesService from "../services/machinesService.js";
+import machinesService from '../services/machinesService.js';
+import kpiService from '../services/kpiService.js';
 
 export const getAllMachines = (req, res) => {
     try {
@@ -13,6 +14,7 @@ export const createNewMachine = (req, res) => {
     try {
         const newMachine = machinesService.createNew(req.body);
         res.status(201).json(newMachine);
+        kpiService.invalidateCache();
     } catch (error) {
         console.error('Failed to add new machine: ', error);
         res.status(500).json({ error: "Failed to add new machine" })
@@ -38,6 +40,7 @@ export const updateMachineStatus = (req, res) => {
         if (!machine) {
             return res.status(404).json({ error: "Machine not found " });
         }
+        kpiService.invalidateCache();
         res.json(machine);
     } catch (error) {
         console.error('Failed to update machine: ', error);

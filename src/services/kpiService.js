@@ -16,10 +16,12 @@ class KPIService {
     invalidateCache() {
         this.#cache = null;
         this.#lastUpdated = null;
+        console.log('Cache invalidated');
     }
 
     getKPIs() {
         if (this.isValidCache()) {
+            console.log('Cache is still valid');
             return this.#cache;
         }
 
