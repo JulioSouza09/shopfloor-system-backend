@@ -38,7 +38,7 @@ export const updateMachineStatus = (req, res) => {
     try {
         const machine = machinesService.updateStatus(req.params.id, req.body);
         if (!machine) {
-            return res.status(404).json({ error: "Machine not found " });
+            return res.status(404).json({ error: "Machine not found" });
         }
         kpiService.invalidateCache();
         res.json(machine);

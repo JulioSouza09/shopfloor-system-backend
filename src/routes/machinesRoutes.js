@@ -10,6 +10,6 @@ app.get('/', machinesController.getAllMachines);
 app.post('/', getValidator(machineSchema), machinesController.createNewMachine);
 app.get('/:id', validateId, machinesController.getMachine);
 app.patch('/:id', validateId, getValidator(machineStatusSchema), machinesController.updateMachineStatus);
-app.delete('/:id', validateId, getValidator(machineSchema), machinesController.removeMachine);
+app.delete('/:id', validateId, machinesController.removeMachine);
 
 export default app;
