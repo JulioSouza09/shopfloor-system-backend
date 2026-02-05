@@ -27,11 +27,11 @@ export const getMachine = (req, res) => {
         if (!machine) {
             return res.status(404).json({ error: "Machine not found." });
         }
+        res.json(machine);
     } catch (error) {
         console.error('Failed to get machine: ', error);
         res.status(500).json({ error: "Failed to get machine" })
     }
-    res.json(machine);
 };
 
 export const updateMachineStatus = (req, res) => {

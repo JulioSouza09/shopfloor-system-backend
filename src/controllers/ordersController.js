@@ -1,5 +1,5 @@
 import ordersService from '../services/ordersService.js';
-import kpisService from '../services/kpiService.js'
+import kpiService from '../services/kpiService.js'
 
 export const getAllOrders = (req, res) => {
     try {
@@ -13,7 +13,7 @@ export const getAllOrders = (req, res) => {
 export const addNewOrder = (req, res) => {
     try {
         const newOrder = ordersService.createNew(req.body);
-        kpisService.invalidateCache();
+        kpiService.invalidateCache();
         res.status(201).json(newOrder);
     } catch (error) {
         console.error('Failed to add new order: ', error);
@@ -40,7 +40,7 @@ export const updateOrder = (req, res) => {
         if (!order) {
             return res.status(404).json({ error: "Order not found" });
         };
-        kpisService.invalidateCache();
+        kpiService.invalidateCache();
         res.json(order);
     } catch (error) {
         console.error('Failed to update order: ', error);
@@ -52,7 +52,7 @@ export const removeOrder = (req, res) => {
     try {
         if (!ordersService.remove(req.params.id))
             return res.status(404).json({ error: "Order not found" });
-        kpisService.invalidateCache();
+        kpiService.invalidateCache();
         res.json({ message: "Order deleted" });
     } catch (error) {
         console.error('Failed to remove order: ', error);
